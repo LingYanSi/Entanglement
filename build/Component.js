@@ -19,8 +19,7 @@ Ent.createClass = function(arg){
         // 每触发一次，就会有一个异步render被加入到队列中，但最终只会执行一次
         var trigger = new Queue(this.render.bind(this)).push
         this.data = Observe(arg.data , trigger);
-
-        console.log('数据监听', arg.data, this.data);
+ 
 
         // 初始化钩子
         this.init = function(ele, props, REPLACE_PLACEHOLDER_ELEMENT){
@@ -29,6 +28,7 @@ Ent.createClass = function(arg){
             // 默认规定，component需要以大写字母开头
             this.$ele = ele
             this.props = props
+
 
             // 渲染前
             this._componentWillMount()

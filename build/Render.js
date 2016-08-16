@@ -62,7 +62,6 @@ function Render(HTMLTree, $ele, props, ctx, REPLACE_PLACEHOLDER_ELEMENT) {
     $ele.innerHTML = ''
     if(REPLACE_PLACEHOLDER_ELEMENT) {
         // 替换占位元素
-        console.log('上下文', ctx);
         Render.replaceChild($ele, docfrag.childNodes, ctx)
    }   else {
        Array.from(docfrag.childNodes).forEach(node => {
@@ -99,7 +98,7 @@ Render.attrsBind = function(ele, attrs, node, refs) {
                 ele.className = value
                 break
             case 'id':
-                ele.id = id
+                ele.id = value
                 break
             case 'ref':
                 refs[value] = ele
@@ -118,6 +117,9 @@ Render.attrsBind = function(ele, attrs, node, refs) {
                 break
             case 'href':
                 node.tag == 'a' && (ele[key] = value)
+                break
+            case 'style':
+                ele.style.cssText += value
                 break
             default:
                 if (key.startsWith('data-')) {

@@ -13,7 +13,8 @@
 observe | done
 parser | done
 render | done
-diff | 0%
+diff | 0%因为没有做diff，因此当数据变化的时候，就会触发render
+只更新必要的dom | 0%
 
 ## 使用
 
