@@ -1,0 +1,67 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.center {
+    text-align: center;
+}
+
+
+.main {
+    display: flex;
+    width: 980px;
+    height: 600px;
+    align-items: stretch;
+    margin: 0 auto;
+}
+
+#sidebar {
+    width: 60px;
+    background: rgb(16, 21, 22);
+}
+
+#list {
+    width: 300px;
+    background: rgb(70, 93, 130);
+    .list-item {
+        height: 50px;
+        display: flex;
+        padding: 10px 10px;
+        border-bottom: 1px solid rgb(38, 41, 40);
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            background-size: cover;
+        }
+        .info {
+            padding-left: 10px;
+            flex: 1;
+            // align-items: center;
+            // display: flex;
+        }
+    }
+}
+#chat {
+    width: 600px;
+    background: rgb(4, 224, 145);
+
+    .title {
+        background: rgb(199, 192, 189);
+        font-size: 1.4em;
+        line-height: 1.8;
+    }
+
+    #dialog {
+        height: 400px;
+        border-bottom: 1px solid rgb(79, 78, 70);
+    }
+
+    #message {
+        .tool {
+            background: rgb(107, 84, 88);
+            line-height: 2;
+        }
+    }
+}
