@@ -12,7 +12,7 @@ var isCanObserve = function(data){
 }
 
 // 监听
-var Observe = function( data, onchange){
+var Observe = function( data, onchange, key){
     // 判断是对象，还是数组
     var type = testType(data)
     var newData
@@ -51,12 +51,12 @@ function observeObejct( obj , fun){
 
                     // 如果newValue对象，也添加监听事件
                     if( isCanObserve(newValue) ){
-                        newValue = Observe(newValue, fun)
+                        newValue = Observe(newValue, fun, item)
                     }
 
                     value = newValue
 
-                    fun && fun(newValue, oldValue)
+                    fun && fun(item, newValue, oldValue)
                     // 如果属性变化了，newValue是一个对象，那就跟踪他的变化
                 },
                 get: function(){

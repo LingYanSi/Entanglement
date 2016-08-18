@@ -251,7 +251,14 @@
 	// 对话框组件
 
 	var Sidebar = Ent.createClass({
-	    template: "<div id=\"sidebar\">\n        嘿嘿\n    </div>"
+	    data: {
+	        num: 0
+	    },
+	    add: function add() {
+	        this.data.num++;
+	    },
+
+	    template: "<div id=\"sidebar\" style=\"color:#fff;\">\n        <p class=\"center\">{this.data.num}</p>\n        <button onClick={this.add.bind(this)}>add</button>\n    </div>"
 	});
 
 	exports.default = Sidebar;

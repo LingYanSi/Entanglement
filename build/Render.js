@@ -1,4 +1,4 @@
-function Render(HTMLTree, $ele, props, ctx, REPLACE_PLACEHOLDER_ELEMENT) {
+function Render(HTMLTree, $ele, props, ctx, REPLACE_PLACEHOLDER_ELEMENT, ENT_ID_PRE = '') {
     var docfrag = document.createDocumentFragment();
     let refs = ctx.refs = {}
         // docfrag = document.createElement('div')
@@ -16,14 +16,11 @@ function Render(HTMLTree, $ele, props, ctx, REPLACE_PLACEHOLDER_ELEMENT) {
                 // 创建元素
                 node.IS_COMPONENT = /[A-Z][a-z]+/.test(node.tag)
                 element = document.createElement(node.tag)
+
             } else {
                 // 文本节点
                 element = document.createTextNode(node.text || '')
             }
-            // console.log(element);
-            (node.children || []).forEach(child => {
-                this.run(child, element)
-            })
 
             // 如果父节点是一个组建，就把他push到propsChildren中去
             if (node.parent && node.parent.IS_COMPONENT) {
@@ -32,6 +29,15 @@ function Render(HTMLTree, $ele, props, ctx, REPLACE_PLACEHOLDER_ELEMENT) {
             } else {
                 parent.appendChild(element)
             }
+
+            // 为元素添加上路标
+            Render.setEntId(element, node, ENT_ID_PRE, !node.tag)
+
+            // console.log(element);
+            ;(node.children || []).forEach(child => {
+                this.run(child, element)
+            })
+
 
             if (node.tag) {
 
@@ -42,8 +48,7 @@ function Render(HTMLTree, $ele, props, ctx, REPLACE_PLACEHOLDER_ELEMENT) {
                             children: node.propsChildren || []
                         })
                     // 从上下文中获取子组件
-                    var compoennt = Ent.render(ctx.components[node.tag], props, element, true)
-                    console.log('组建实例化', compoennt);
+                    var compoennt = Ent.render(ctx.components[node.tag], props, element, true, element.dataset['entid']+'-' )
                 } else if (node.tag == 'slot') {
                     // 替换占位元素
                     Render.replaceChild(element, props.children, ctx)
@@ -80,6 +85,7 @@ Render.replaceChild = function($ele, childNodes, ctx){
             Render.inserAfter($parent, $current, node)
             $current = node
         }
+        // $ele.appendChild(node)
    })
 
    ctx.$ele = $current
@@ -90,15 +96,33 @@ Render.inserAfter = function($parent, $ele, element){
     next ? $parent.insertBefore(next, element) : $parent.appendChild(element)
 }
 
+Render.setEntId = function(ele, node, ENT_ID_PRE, IS_TEXT_NODE){
+    if(!IS_TEXT_NODE){
+        ele.setAttribute('data-entid',  node.entId)
+    }else{
+        console.log(ele, ele.parentNode);
+        let $parent = ele.parentNode
+        $parent.insertBefore(document.createComment( node.entId + '-start'), ele)
+
+        let end = document.createComment( node.entId + '-end')
+        ele.nextSibling ? $parent.insertBefore(end, ele.nextSibling) : $parent.appendChild(end)
+    }
+
+}
+
 Render.attrsBind = function(ele, attrs, node, refs) {
+
     for (let key in attrs) {
         let value = attrs[key]
         switch (key) {
+            case 'style':
+                ele[key] = value
+                break
             case 'class':
                 ele.className = value
                 break
             case 'id':
-                ele.id = value
+                ele[key] = value
                 break
             case 'ref':
                 refs[value] = ele
@@ -117,9 +141,6 @@ Render.attrsBind = function(ele, attrs, node, refs) {
                 break
             case 'href':
                 node.tag == 'a' && (ele[key] = value)
-                break
-            case 'style':
-                ele.style.cssText += value
                 break
             default:
                 if (key.startsWith('data-')) {
