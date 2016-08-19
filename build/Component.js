@@ -29,6 +29,8 @@ Ent.createClass = function(arg){
             this.$ele = ele
             this.props = props
             this.refs = {}
+            // 子组件
+            this.childrenComponents = {}
 
 
             // 渲染前
@@ -79,14 +81,12 @@ Ent.createClass = function(arg){
             // 去parser字符串,获取dom树
             var tree = Parser(this.template, this, this.__ENT_ID_PRE)
             if(this.__oldTree){
-                console.log('执行Diff', this, this.refs);
+                console.log('执行Diff');
                 Diff(this.__oldTree, tree , this.$ele, this)
                 return
             }
 
-            this.__oldTree = tree
-
-            // console.log( tree);
+            this.__oldTree = tree 
 
             // Render(tree, this.$ele, this.props, this, this.__REPLACE_PLACEHOLDER_ELEMENT, this.__ENT_ID_PRE)
             this.__render(tree, this.$ele, this.__REPLACE_PLACEHOLDER_ELEMENT)
